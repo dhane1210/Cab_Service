@@ -1,5 +1,6 @@
 package com.CabService.CabService.controller;
 
+import com.CabService.CabService.dto.DriverWithCarDetails;
 import com.CabService.CabService.model.Car;
 import com.CabService.CabService.model.Driver;
 import com.CabService.CabService.service.AdminService;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -44,10 +46,16 @@ public class AdminController {
         return adminService.addDriver(driver);
     }
 
+//    @GetMapping("/available-drivers")
+//    public List<Driver> getAvailableDrivers() {
+//        return adminService.getAvailableDrivers();
+//    }
+
     @GetMapping("/available-drivers")
-    public List<Driver> getAvailableDrivers() {
-        return adminService.getAvailableDrivers();
+    public List<DriverWithCarDetails> getAvailableDrivers() {
+        return adminService.getAvailableDriversWithCarDetails();
     }
+
 
     // Connect car to driver
     @PostMapping("/assign-car-to-driver")

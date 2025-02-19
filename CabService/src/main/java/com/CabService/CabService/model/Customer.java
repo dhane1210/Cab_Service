@@ -18,7 +18,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerId;
 
-    private String name;
+    private String username;
+    private String password;
     private String address;
     private String phone;
     private String nic; // National ID Card

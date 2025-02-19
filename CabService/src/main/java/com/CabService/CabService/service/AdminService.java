@@ -1,4 +1,5 @@
 package com.CabService.CabService.service;
+import com.CabService.CabService.dto.DriverWithCarDetails;
 import com.CabService.CabService.model.*;
 import com.CabService.CabService.repo.AdminRepository;
 import com.CabService.CabService.repo.CarRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -67,12 +69,32 @@ public class AdminService {
 
     // Assign car to driver
     public String assignCarToDriver(int driverId, int carId) {
-        Driver driver = driverRepository.findById(driverId).orElseThrow(() -> new RuntimeException("Driver not found"));
-        Car car = carRepository.findById(carId).orElseThrow(() -> new RuntimeException("Car not found"));
-        driver.setAssignedCar(car);
+        // Fetch the driver
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
+
+        // Fetch the car
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+
+        // Ensure the car is available
+        if (!car.isAvailable()) {
+            throw new RuntimeException("Car is not available for assignment");
+        }
+
+        // Update driver and car details
+        driver.setAssignedCar(car); // Set car for driver
+        driver.setAvailable(true);  // Mark driver as available
+        car.setAvailable(false);    // Mark car as unavailable
+
+        // Save the updates
         driverRepository.save(driver);
+        carRepository.save(car);
+
         return "Car assigned to driver successfully";
     }
+
+
 
     // Calculate base fare
     public double calculateBaseFare(double distance) {
@@ -108,5 +130,29 @@ public class AdminService {
         bill.setTotalAmount(totalAmount);
 
         return bill;
+    }
+
+    public List<DriverWithCarDetails> getAvailableDriversWithCarDetails() {
+        return driverRepository.findAvailableDrivers()
+                .stream()
+                .map(driver -> {
+                    DriverWithCarDetails dto = new DriverWithCarDetails();
+                    dto.setDriverId(driver.getDriverId());
+                    dto.setName(driver.getName());
+                    dto.setLicenseNumber(driver.getLicenseNumber());
+                    dto.setPhone(driver.getPhone());
+                    dto.setAvailable(driver.isAvailable());
+
+                    if (driver.getAssignedCar() != null) {
+                        dto.setCarModel(driver.getAssignedCar().getModel());
+                        dto.setCarLicenseNumber(driver.getAssignedCar().getLicensePlate());
+                    } else {
+                        dto.setCarModel("No car assigned");
+                        dto.setCarLicenseNumber("N/A");
+                    }
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }

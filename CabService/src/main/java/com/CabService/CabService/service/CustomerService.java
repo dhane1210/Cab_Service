@@ -1,22 +1,30 @@
 package com.CabService.CabService.service;
 
+import com.CabService.CabService.config.CustomerPrincipal;
 import com.CabService.CabService.model.Bill;
 import com.CabService.CabService.model.Booking;
+import com.CabService.CabService.model.Customer;
 import com.CabService.CabService.repo.BookingRepository;
 import com.CabService.CabService.repo.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CustomerService {
+public class CustomerService implements UserDetailsService {
 
     @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
     private BookingRepository bookingRepository;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     @Autowired
     private AdminService adminService;
@@ -53,6 +61,27 @@ public class CustomerService {
         double discount = adminService.calculateDiscount(baseFare, discountRate);
 
         return new Bill(baseFare, tax, discount);
+    }
+
+    public Customer addCustomer(Customer customer) {
+        customer.setPassword(encoder.encode(customer.getPassword()));
+        return customerRepository.save(customer);
+
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Customer customer = customerRepository.findByUsername(username);
+        if(customer == null ){
+            System.out.println("User Not Found");
+            throw new UsernameNotFoundException("User Not Found");
+        }
+        return new CustomerPrincipal(customer);
+    }
+
+
+    public List<Customer> getCustomer() {
+        return customerRepository.findAll();
     }
 }
 
