@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
+//@CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -17,11 +17,6 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    // Login endpoint
-    @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password) {
-        return adminService.authenticate(username, password);
-    }
 
     // Update discounts and taxes
     @PutMapping("/update-pricing")

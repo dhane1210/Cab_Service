@@ -25,11 +25,7 @@ public class AdminService {
     @Autowired
     private DriverRepository driverRepository;
 
-    // Authenticate admin
-    public String authenticate(String username, String password) {
-        Admin admin = adminRepository.findByUsernameAndPassword(username, password);
-        return (admin != null) ? "Login successful" : "Invalid credentials";
-    }
+
 
     // Update pricing
     public String updatePricing(double discount, double tax) {
