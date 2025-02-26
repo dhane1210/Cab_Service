@@ -13,8 +13,13 @@ public interface DriverRepository extends JpaRepository<Driver, Integer> {
     // Find all available drivers
 //    @Query("SELECT d FROM Driver d WHERE d.isAvailable = true")
 //    List<Driver> findAvailableDrivers();
-    @Query("SELECT d FROM Driver d LEFT JOIN FETCH d.assignedCar WHERE d.isAvailable = true")
+//    @Query("SELECT d FROM Driver d LEFT JOIN FETCH d.assignedCar WHERE d.isAvailable = true")
+//    List<Driver> findAvailableDrivers();
+
+    @Query("SELECT d FROM Driver d WHERE d.isAvailable = true")
     List<Driver> findAvailableDrivers();
 
-
+    // Find all drivers with assigned cars
+    @Query("SELECT d FROM Driver d WHERE d.assignedCar IS NOT NULL")
+    List<Driver> findDriversWithAssignedCars();
 }

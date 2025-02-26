@@ -6,6 +6,7 @@ import com.CabService.CabService.model.Bill;
 import com.CabService.CabService.model.Booking;
 import com.CabService.CabService.model.Customer;
 import com.CabService.CabService.model.Driver;
+import com.CabService.CabService.repo.BillRepository;
 import com.CabService.CabService.repo.BookingRepository;
 import com.CabService.CabService.repo.CustomerRepository;
 import com.CabService.CabService.repo.DriverRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +37,11 @@ public class CustomerService implements UserDetailsService {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private BillRepository billRepository; // Add BillRepository
+
     // Add a new booking
+    @Transactional // Ensure this method is transactional
     public String addBooking(BookingRequest bookingRequest) {
         // Fetch the driver and customer from the database
         Driver driver = driverRepository.findById(bookingRequest.getDriverId())
@@ -54,10 +60,34 @@ public class CustomerService implements UserDetailsService {
         booking.setStatus("Pending"); // Set the initial status
 
         // Save the booking
-        bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+
+        // Create and link a Bill to the booking
+        createAndLinkBill(savedBooking);
 
         return "Booking added successfully";
     }
+
+    // Create and link a Bill to the booking
+    private void createAndLinkBill(Booking booking) {
+        // Calculate base fare, taxes, and discount
+        double baseFare = adminService.calculateBaseFare(booking.getDistance());
+        double taxRate = adminService.getPricingConfig().getTax(); // Get tax rate
+        double tax = adminService.calculateTax(baseFare, taxRate); // Calculate tax
+        double discountRate = adminService.getPricingConfig().getDiscount(); // Get discount rate
+        double discount = adminService.calculateDiscount(baseFare, discountRate); // Calculate discount
+
+        // Create a new Bill
+        Bill bill = new Bill(booking, baseFare, 0.0, tax, discount); // waitingTimeCharge is set to 0.0 by default
+
+        // Save the bill
+        billRepository.save(bill);
+
+        // Link the bill to the booking
+        booking.setBill(bill);
+        bookingRepository.save(booking); // Update the booking with the bill
+    }
+
     // Get bookings by customer
     public List<Booking> getBookingsByCustomer(int customerId) {
         return bookingRepository.findByCustomer_CustomerId(customerId);
@@ -74,19 +104,8 @@ public class CustomerService implements UserDetailsService {
     // Get bill
     public Bill getBill(int bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new RuntimeException("Booking not found"));
-        double baseFare = adminService.calculateBaseFare(booking.getDistance());
-
-        // Get the tax rate from the pricing configuration
-        double taxRate = adminService.getPricingConfig().getTax();  // Assuming getTax() returns the tax rate
-        double tax = adminService.calculateTax(baseFare, taxRate);  // Pass both baseFare and taxRate
-
-        double discountRate = adminService.getPricingConfig().getDiscount();  // Assuming getDiscount() returns the discount rate
-        double discount = adminService.calculateDiscount(baseFare, discountRate);
-
-        return new Bill(baseFare, tax, discount);
+        return booking.getBill(); // Return the linked bill
     }
-
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -114,4 +133,3 @@ public class CustomerService implements UserDetailsService {
         bookingRepository.deleteById(bookingId);
     }
 }
-

@@ -36,7 +36,7 @@ public class Driver {
     private String licenseNumber;
     private String phone;
 
-    private boolean isAvailable = false; // Default to false
+    private boolean isAvailable = true;
 
     @OneToOne
     @JoinColumn(name = "car_id", referencedColumnName = "carId", unique = true) // Add join column

@@ -1,10 +1,7 @@
 package com.CabService.CabService.service;
 import com.CabService.CabService.dto.DriverWithCarDetails;
 import com.CabService.CabService.model.*;
-import com.CabService.CabService.repo.AdminRepository;
-import com.CabService.CabService.repo.CarRepository;
-import com.CabService.CabService.repo.DriverRepository;
-import com.CabService.CabService.repo.PricingConfigRepository;
+import com.CabService.CabService.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +22,8 @@ public class AdminService {
     @Autowired
     private DriverRepository driverRepository;
 
-
+    @Autowired
+    private BookingRepository bookingRepository;
 
     // Update pricing
     public String updatePricing(double discount, double tax) {
@@ -54,6 +52,7 @@ public class AdminService {
 
     // Manage drivers
     public String addDriver(Driver driver) {
+
         driverRepository.save(driver);
         return "Driver added successfully";
     }
@@ -80,7 +79,7 @@ public class AdminService {
 
         // Update driver and car details
         driver.setAssignedCar(car); // Set car for driver
-        driver.setAvailable(true);  // Mark driver as available
+        driver.setAvailable(false);  // Mark driver as unavailable
         car.setAvailable(false);    // Mark car as unavailable
 
         // Save the updates
@@ -128,6 +127,26 @@ public class AdminService {
         return bill;
     }
 
+    public List<DriverWithCarDetails> getDriversWithAssignedCars() {
+        return driverRepository.findDriversWithAssignedCars()
+                .stream()
+                .map(driver -> {
+                    DriverWithCarDetails dto = new DriverWithCarDetails();
+                    dto.setDriverId(driver.getDriverId());
+                    dto.setName(driver.getName());
+                    dto.setLicenseNumber(driver.getLicenseNumber());
+                    dto.setPhone(driver.getPhone());
+                    dto.setAvailable(driver.isAvailable());
+
+                    // Since the query ensures assignedCar is not null, we don't need to check for null
+                    dto.setCarModel(driver.getAssignedCar().getModel());
+                    dto.setCarLicenseNumber(driver.getAssignedCar().getLicensePlate());
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
     public List<DriverWithCarDetails> getAvailableDriversWithCarDetails() {
         return driverRepository.findAvailableDrivers()
                 .stream()
@@ -150,5 +169,26 @@ public class AdminService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<Booking> getAllBookings() {
+        return bookingRepository.findAll(); // Fetch all bookings from the database
+    }
+
+    public String acceptBooking(int bookingId) {
+        // Find the booking by ID
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        // Check if the booking is already accepted
+        if ("Accepted".equals(booking.getStatus())) {
+            return "Booking is already accepted";
+        }
+
+        // Update the status to "Accepted"
+        booking.setStatus("Accepted");
+        bookingRepository.save(booking);
+
+        return "Booking accepted successfully";
     }
 }

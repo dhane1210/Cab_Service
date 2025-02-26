@@ -33,6 +33,7 @@ public class Booking {
 
     private String status; // Pending, Confirmed, In Progress, Completed
 
-
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    private Bill bill; // Reference to the Bill entity
 
 }

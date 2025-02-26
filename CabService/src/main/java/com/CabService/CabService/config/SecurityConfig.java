@@ -14,10 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 
 @Configuration
 @EnableWebSecurity
@@ -35,10 +33,12 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer.disable()) // Disable CSRF
                 .cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("user/add-user", "user/login", "admin/available-drivers")
+                        .requestMatchers("/user/add-user", "/user/login", "/admin/assigned-drivers","/admin/accept-booking/{bookingId}","/admin/drivers-with-cars","/admin/available-drivers-withoutCar","/admin/available-cars")
                         .permitAll() // Allow public access to these endpoints
                         .requestMatchers("/add-booking")
                         .hasRole("CUSTOMER") // Restrict access to CUSTOMER role
+                        .requestMatchers("/admin/**") // Allow access to all admin endpoints
+                        .hasRole("ADMIN") // Restrict access to ADMIN role
                         .anyRequest()
                         .authenticated()) // Require authentication for all other endpoints
                 .httpBasic(Customizer.withDefaults()) // Use HTTP Basic authentication

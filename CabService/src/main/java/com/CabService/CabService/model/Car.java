@@ -25,10 +25,8 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int carId;
-
     private String model;
     private String licensePlate;
-
     private boolean isAvailable = true;
 
 

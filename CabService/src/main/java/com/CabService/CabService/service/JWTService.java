@@ -20,18 +20,17 @@ import java.util.function.Function;
 public class JWTService {
 
     // Use a fixed secret key (replace "your-secret-key" with a strong, secure key)
-    private final String secretKey = "Ngnlh61OFqkZRwK8YyteO8ZQM8CwYMXVIu2wX+L1sVA=";
+    private final String secretKey = "NF7rINhTciWgUTgE9wExt6lF630dmk+VvROp6Tdrmgw=";
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
-                .claims(new HashMap<>()) // Add any custom claims if needed
+                .claim("role", role) // Include role in the token
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000)) // 1 hour expiration
                 .signWith(getKey())
                 .compact();
     }
-
     private SecretKey getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);

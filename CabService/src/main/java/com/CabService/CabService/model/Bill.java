@@ -14,9 +14,9 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int billId;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL) // Cascade operations
     @JoinColumn(name = "booking_id", nullable = false)
-    private Booking booking;// Foreign key to Booking
+    private Booking booking; // Foreign key to Booking
 
     private double baseFare;
     private double waitingTimeCharge; // Extra charge for waiting time
@@ -24,11 +24,13 @@ public class Bill {
     private double discount;
     private double totalAmount;
 
-    public Bill(double baseFare, double taxes, double discount) {
+    // Constructor to create a Bill with a Booking
+    public Bill(Booking booking, double baseFare, double waitingTimeCharge, double taxes, double discount) {
+        this.booking = booking;
         this.baseFare = baseFare;
+        this.waitingTimeCharge = waitingTimeCharge;
         this.taxes = taxes;
         this.discount = discount;
-        // Optionally calculate the total amount here, or set it later
-        this.totalAmount = baseFare + taxes - discount;
+        this.totalAmount = baseFare + waitingTimeCharge + taxes - discount; // Calculate total amount
     }
 }
