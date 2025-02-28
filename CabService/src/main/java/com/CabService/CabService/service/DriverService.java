@@ -30,13 +30,13 @@ public class DriverService {
 
 
     // Complete trip
-    public String completeTrip(int bookingId, double waitingTime) {
-        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new RuntimeException("Booking not found"));
-        booking.setWaitingTime(waitingTime);
-        booking.setStatus("Completed");
-        bookingRepository.save(booking);
-        return "Trip completed successfully";
-    }
+//    public String completeTrip(int bookingId, double waitingTime) {
+//        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new RuntimeException("Booking not found"));
+//        booking.setWaitingTime(waitingTime);
+//        booking.setStatus("Completed");
+//        bookingRepository.save(booking);
+//        return "Trip completed successfully";
+//    }
 
     // View assigned trip
     public Booking getAssignedTrip(int driverId) {

@@ -25,10 +25,10 @@ public class AdminController {
 
 
     // Update discounts and taxes
-    @PutMapping("/update-pricing")
-    public String updatePricing(@RequestParam double discount, @RequestParam double tax) {
-        return adminService.updatePricing(discount, tax);
-    }
+//    @PutMapping("/update-pricing")
+//    public String updatePricing(@RequestParam double discount, @RequestParam double tax) {
+//        return adminService.updatePricing(discount, tax);
+//    }
 
     @GetMapping("/all-bookings")
     public List<Booking> getAllBookings() {
@@ -38,6 +38,11 @@ public class AdminController {
     @GetMapping("/drivers-with-cars")
     public List<DriverWithCarDetails> getDriversWithAssignedCars() {
         return adminService.getDriversWithAssignedCars();
+    }
+
+    @GetMapping("/drivers-with-availability")
+    public List<Driver> getDriversWithUpdatedAvailability() {
+        return adminService.getDriversWithUpdatedAvailability();
     }
 
     @GetMapping("/available-cars")

@@ -13,8 +13,8 @@ public class AdminService {
 
     @Autowired
     private AdminRepository adminRepository;
-    @Autowired
-    private PricingConfigRepository pricingConfigRepository;
+//    @Autowired
+//    private PricingConfigRepository pricingConfigRepository;
 
     @Autowired
     private CarRepository carRepository;
@@ -26,19 +26,19 @@ public class AdminService {
     private BookingRepository bookingRepository;
 
     // Update pricing
-    public String updatePricing(double discount, double tax) {
-        // Find the existing pricing configuration (assuming there is one)
-        PricingConfig config = pricingConfigRepository.findById(1).orElse(new PricingConfig());
-
-        // Update the pricing fields
-        config.setDiscount(discount);
-        config.setTax(tax);
-
-        // Save the updated pricing configuration
-        pricingConfigRepository.save(config);
-
-        return "Pricing updated successfully";
-    }
+//    public String updatePricing(double discount, double tax) {
+//        // Find the existing pricing configuration (assuming there is one)
+//        PricingConfig config = pricingConfigRepository.findById(1).orElse(new PricingConfig());
+//
+//        // Update the pricing fields
+//        config.setDiscount(discount);
+//        config.setTax(tax);
+//
+//        // Save the updated pricing configuration
+//        pricingConfigRepository.save(config);
+//
+//        return "Pricing updated successfully";
+//    }
 
     // Manage cars
     public String addCar(Car car) {
@@ -89,32 +89,11 @@ public class AdminService {
         return "Car assigned to driver successfully";
     }
 
-
-
-    // Calculate base fare
-    public double calculateBaseFare(double distance) {
-        return distance;
-    }
-
-    // Calculate tax
-    public double calculateTax(double baseFare, double taxRate) {
-        return baseFare * (taxRate / 100);
-    }
-
-    public PricingConfig getPricingConfig() {
-        // Fetch the pricing configuration, assuming it's always the same one (ID = 1)
-        return pricingConfigRepository.findById(1).orElseThrow(() -> new RuntimeException("Pricing configuration not found"));
-    }
-
-    // Calculate discount
-    public double calculateDiscount(double baseFare, double discountRate) {
-        return baseFare * (discountRate / 100);
-    }
     // Generate bill
     public Bill generateBill(double distance, double ratePerKm, double waitingTimeCharge, double taxRate, double discountRate) {
-        double baseFare = calculateBaseFare(distance);
-        double taxes = calculateTax(baseFare, taxRate);
-        double discount = calculateDiscount(baseFare, discountRate);
+        double baseFare = distance * ratePerKm;
+        double taxes = baseFare * (taxRate / 100);
+        double discount = baseFare * (discountRate / 100);
         double totalAmount = baseFare + waitingTimeCharge + taxes - discount;
 
         Bill bill = new Bill();
@@ -126,6 +105,71 @@ public class AdminService {
 
         return bill;
     }
+
+
+
+        // Calculate base fare
+    public double calculateBaseFare(double distance) {
+        return distance;
+    }
+
+    // Calculate tax
+    public double calculateTax(double baseFare, double taxRate) {
+        return baseFare * (taxRate / 100);
+    }
+
+//    public PricingConfig getPricingConfig() {
+//        // Fetch the pricing configuration, assuming it's always the same one (ID = 1)
+//        return pricingConfigRepository.findById(1).orElseThrow(() -> new RuntimeException("Pricing configuration not found"));
+//    }
+
+    // Calculate discount
+    public double calculateDiscount(double baseFare, double discountRate) {
+        return baseFare * (discountRate / 100);
+    }
+    // Generate bill
+//    public Bill generateBill(double distance, double ratePerKm, double waitingTimeCharge, double taxRate, double discountRate) {
+//        double baseFare = calculateBaseFare(distance);
+//        double taxes = calculateTax(baseFare, taxRate);
+//        double discount = calculateDiscount(baseFare, discountRate);
+//        double totalAmount = baseFare + waitingTimeCharge + taxes - discount;
+//
+//        Bill bill = new Bill();
+//        bill.setBaseFare(baseFare);
+//        bill.setWaitingTimeCharge(waitingTimeCharge);
+//        bill.setTaxes(taxes);
+//        bill.setDiscount(discount);
+//        bill.setTotalAmount(totalAmount);
+//
+//        return bill;
+//    }
+
+
+
+
+
+    public List<Driver> getDriversWithUpdatedAvailability() {
+        // Fetch all drivers
+        List<Driver> drivers = driverRepository.findAll();
+
+        // Fetch drivers assigned to active bookings
+        List<Driver> assignedDrivers = bookingRepository.findDriversAssignedToActiveBookings();
+
+        // Update driver availability
+        for (Driver driver : drivers) {
+            boolean isAssigned = assignedDrivers.stream()
+                    .anyMatch(assignedDriver -> assignedDriver.getDriverId() == driver.getDriverId());
+            driver.setAvailable(!isAssigned);
+        }
+
+        return drivers;
+    }
+
+
+
+
+
+
 
     public List<DriverWithCarDetails> getDriversWithAssignedCars() {
         return driverRepository.findDriversWithAssignedCars()

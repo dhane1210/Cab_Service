@@ -19,10 +19,10 @@ public class DriverController {
     }
 
     // Add trip details
-    @PutMapping("/end-trip")
-    public String endTrip(@RequestParam int bookingId, @RequestParam double waitingTime) {
-        return driverService.completeTrip(bookingId, waitingTime);
-    }
+//    @PutMapping("/end-trip")
+//    public String endTrip(@RequestParam int bookingId, @RequestParam double waitingTime) {
+//        return driverService.completeTrip(bookingId, waitingTime);
+//    }
 
     // View assigned trip
     @GetMapping("/view-assigned-trip/{driverId}")

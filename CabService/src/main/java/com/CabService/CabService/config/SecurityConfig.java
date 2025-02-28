@@ -33,9 +33,9 @@ public class SecurityConfig {
                 .csrf(customizer -> customizer.disable()) // Disable CSRF
                 .cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/user/add-user", "/user/login", "/admin/assigned-drivers","/admin/accept-booking/{bookingId}","/admin/drivers-with-cars","/admin/available-drivers-withoutCar","/admin/available-cars")
+                        .requestMatchers("/user/add-user","/admin/all-bookings","/admin/drivers-with-availability", "/user/login", "/admin/assigned-drivers","/admin/accept-booking/{bookingId}","/admin/drivers-with-cars","/admin/available-drivers-withoutCar","/admin/available-cars")
                         .permitAll() // Allow public access to these endpoints
-                        .requestMatchers("/add-booking")
+                        .requestMatchers("/add-booking","/bookings/**")
                         .hasRole("CUSTOMER") // Restrict access to CUSTOMER role
                         .requestMatchers("/admin/**") // Allow access to all admin endpoints
                         .hasRole("ADMIN") // Restrict access to ADMIN role

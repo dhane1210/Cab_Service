@@ -1,39 +1,31 @@
 package com.CabService.CabService.model;
 
-
-
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 public class Booking {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int bookingId;
 
-    @ManyToOne
-    @JoinColumn(name = "driver_id", nullable = false) // Maps the foreign key for the assigned driver
-    private Driver assignedDriver;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer; // Foreign key to Customer
-
     private String startLocation;
     private String endLocation;
-    private double distance; // In kilometers
+    private double distance;
     private double fare;
-    private double waitingTime;
-
-    private String status; // Pending, Confirmed, In Progress, Completed
-
+    private String status;
+    private double waitingTime; // Add this field
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    @JsonManagedReference // Prevents infinite recursion
     private Bill bill; // Reference to the Bill entity
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name = "driver_id", nullable = false)
+    private Driver assignedDriver;
 }

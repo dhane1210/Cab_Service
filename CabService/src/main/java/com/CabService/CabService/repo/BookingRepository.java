@@ -1,6 +1,7 @@
 package com.CabService.CabService.repo;
 
 import com.CabService.CabService.model.Booking;
+import com.CabService.CabService.model.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,4 +26,7 @@ Booking findAssignedBookingByDriver(@Param("driverId") int driverId);
     List<Booking> findAll();
 
     Booking findByBookingId(int bookingId);
+    // Find all drivers assigned to active bookings
+    @Query("SELECT DISTINCT b.assignedDriver FROM Booking b WHERE b.status = 'Active'")
+    List<Driver> findDriversAssignedToActiveBookings();
 }

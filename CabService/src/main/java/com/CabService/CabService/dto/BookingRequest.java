@@ -10,6 +10,6 @@ public class BookingRequest {
     private String endLocation;
     private double distance;
     private double fare;
-
+    private double waitingTime; // Add this field
     // Getters and setters
 }

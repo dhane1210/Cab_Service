@@ -12,10 +12,10 @@ public class BookingController {
     private BookingService bookingService;
 
     // Calculate fare for a booking
-    @GetMapping("/calculate-fare/{bookingId}")
-    public double calculateFare(@PathVariable int bookingId) {
-        return bookingService.calculateFare(bookingId);
-    }
+//    @GetMapping("/calculate-fare/{bookingId}")
+//    public double calculateFare(@PathVariable int bookingId) {
+//        return bookingService.calculateFare(bookingId);
+//    }
 
     // Print booking details as PDF
     @GetMapping("/generate-pdf/{bookingId}")

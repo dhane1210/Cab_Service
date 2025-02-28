@@ -40,8 +40,8 @@ public class CustomerService implements UserDetailsService {
     @Autowired
     private BillRepository billRepository; // Add BillRepository
 
-    // Add a new booking
-    @Transactional // Ensure this method is transactional
+    // Add a new booking and create a bill
+    @Transactional
     public String addBooking(BookingRequest bookingRequest) {
         // Fetch the driver and customer from the database
         Driver driver = driverRepository.findById(bookingRequest.getDriverId())
@@ -51,14 +51,14 @@ public class CustomerService implements UserDetailsService {
 
         // Create a new Booking object
         Booking booking = new Booking();
-        booking.setAssignedDriver(driver); // Set the assigned driver
-        booking.setCustomer(customer); // Set the customer
+        booking.setAssignedDriver(driver);
+        booking.setCustomer(customer);
         booking.setStartLocation(bookingRequest.getStartLocation());
         booking.setEndLocation(bookingRequest.getEndLocation());
         booking.setDistance(bookingRequest.getDistance());
         booking.setFare(bookingRequest.getFare());
-        booking.setStatus("Pending"); // Set the initial status
-
+        booking.setStatus("Pending");
+        booking.setWaitingTime(bookingRequest.getWaitingTime()); // Set waiting time
         // Save the booking
         Booking savedBooking = bookingRepository.save(booking);
 
@@ -70,15 +70,17 @@ public class CustomerService implements UserDetailsService {
 
     // Create and link a Bill to the booking
     private void createAndLinkBill(Booking booking) {
-        // Calculate base fare, taxes, and discount
-        double baseFare = adminService.calculateBaseFare(booking.getDistance());
-        double taxRate = adminService.getPricingConfig().getTax(); // Get tax rate
-        double tax = adminService.calculateTax(baseFare, taxRate); // Calculate tax
-        double discountRate = adminService.getPricingConfig().getDiscount(); // Get discount rate
-        double discount = adminService.calculateDiscount(baseFare, discountRate); // Calculate discount
+        // Calculate billing details
+        double baseFare = booking.getFare(); // Use the fare from the booking
+        double waitingTimeCharge = 0.0; // Default waiting time charge
+        double taxRate = 10.0; // Example tax rate (10%)
+        double discountRate = 5.0; // Example discount rate (5%)
+
+        double taxes = baseFare * (taxRate / 100); // Calculate tax
+        double discount = baseFare * (discountRate / 100); // Calculate discount
 
         // Create a new Bill
-        Bill bill = new Bill(booking, baseFare, 0.0, tax, discount); // waitingTimeCharge is set to 0.0 by default
+        Bill bill = new Bill(booking, baseFare, waitingTimeCharge, taxes, discount);
 
         // Save the bill
         billRepository.save(bill);
