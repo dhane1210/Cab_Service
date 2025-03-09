@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Integer> {
-    // Custom query to find a bill by booking ID
     Optional<Bill> findByBooking_BookingId(int bookingId);
 }

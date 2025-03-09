@@ -17,22 +17,23 @@ public class Bill {
 
     @OneToOne
     @JoinColumn(name = "booking_id", nullable = false)
-    @JsonBackReference // Prevents infinite recursion
-    private Booking booking; // Foreign key to Booking
+    @JsonBackReference
+    private Booking booking;
 
-    private double baseFare; // Base fare for the ride
-    private double waitingTimeCharge; // Extra charge for waiting time
-    private double taxes; // Tax amount
-    private double discount; // Discount amount
-    private double totalAmount; // Total amount to be paid
+    private double baseFare;
+    private double waitingTimeCharge;
+    private double taxes;
+    private double discount;
+    private double totalAmount;
 
-    // Constructor to create a Bill with a Booking
-    public Bill(Booking booking, double baseFare, double waitingTimeCharge, double taxes, double discount) {
+    public Bill(Booking booking, double baseFare, double waitingTimeCharge, double taxes, double discount, double totalAmount) {
         this.booking = booking;
         this.baseFare = baseFare;
         this.waitingTimeCharge = waitingTimeCharge;
         this.taxes = taxes;
         this.discount = discount;
-        this.totalAmount = baseFare + waitingTimeCharge + taxes - discount; // Calculate total amount
+        this.totalAmount = totalAmount;
     }
+
+
 }

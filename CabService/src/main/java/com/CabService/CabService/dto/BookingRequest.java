@@ -4,12 +4,11 @@ import lombok.Data;
 
 @Data
 public class BookingRequest {
-    private int driverId;
-    private int customerId;
     private String startLocation;
     private String endLocation;
     private double distance;
     private double fare;
-    private double waitingTime; // Add this field
-    // Getters and setters
+    private double waitingTime;
+    private int customerId; // Direct customerId field
+    private int driverId;   // Direct driverId field
 }

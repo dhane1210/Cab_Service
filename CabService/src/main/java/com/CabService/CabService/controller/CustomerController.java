@@ -8,17 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.List;
 
-//@CrossOrigin
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
 
     @DeleteMapping("/delete-booking/{bookingId}")
     public ResponseEntity<?> deleteBooking(@PathVariable int bookingId) {
@@ -58,4 +56,6 @@ public class CustomerController {
     public Bill viewBill(@PathVariable int bookingId) {
         return customerService.getBill(bookingId);
     }
+
+
 }

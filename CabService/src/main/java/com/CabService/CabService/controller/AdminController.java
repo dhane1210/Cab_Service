@@ -1,12 +1,12 @@
 package com.CabService.CabService.controller;
 
+
+import com.CabService.CabService.dto.BillUpdateRequest;
 import com.CabService.CabService.dto.DriverWithCarDetails;
-import com.CabService.CabService.model.Bill;
-import com.CabService.CabService.model.Booking;
-import com.CabService.CabService.model.Car;
-import com.CabService.CabService.model.Driver;
+import com.CabService.CabService.model.*;
 import com.CabService.CabService.service.AdminService;
 import com.CabService.CabService.service.BillService;
+import com.CabService.CabService.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +23,9 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private CustomerService customerService;
 
-    // Update discounts and taxes
-//    @PutMapping("/update-pricing")
-//    public String updatePricing(@RequestParam double discount, @RequestParam double tax) {
-//        return adminService.updatePricing(discount, tax);
-//    }
 
     @GetMapping("/all-bookings")
     public List<Booking> getAllBookings() {
@@ -61,7 +58,6 @@ public class AdminController {
     }
 
 
-
     // Manage drivers
     @PostMapping("/add-driver")
     public String addDriver(@RequestBody Driver driver) {
@@ -85,17 +81,36 @@ public class AdminController {
         return adminService.assignCarToDriver(driverId, carId);
     }
 
-    // Create a new bill
-    @PostMapping("/create-bill")
-    public ResponseEntity<Bill> createBill(@RequestBody Bill bill) {
-        Bill createdBill = billService.createBill(bill);
-        return ResponseEntity.ok(createdBill);
-    }
 
     // Fetch a bill by booking ID
     @GetMapping("/bill/{bookingId}")
     public ResponseEntity<Bill> getBillByBookingId(@PathVariable int bookingId) {
         Bill bill = billService.getBillByBookingId(bookingId);
         return ResponseEntity.ok(bill);
+    }
+
+
+    @PutMapping("/price-config")
+    public String updatePriceConfig(@RequestBody PriceConfig priceConfig) {
+        return customerService.updatePriceConfig(priceConfig);
+    }
+
+    @GetMapping("/price-config")
+    public PriceConfig getPriceConfig() {
+        return customerService.getDefaultPriceConfig();
+    }
+
+    @PutMapping("/bill/update/{bookingId}")
+    public String updateBill(
+            @PathVariable int bookingId,
+            @RequestBody BillUpdateRequest request) {
+        return billService.updateBill(
+                bookingId,
+                request.getBaseFare(),
+                request.getWaitingTimeCharge(),
+                request.getTaxes(),
+                request.getDiscount(),
+                request.getTotalAmount()
+        );
     }
 }

@@ -11,13 +11,6 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    // Calculate fare for a booking
-//    @GetMapping("/calculate-fare/{bookingId}")
-//    public double calculateFare(@PathVariable int bookingId) {
-//        return bookingService.calculateFare(bookingId);
-//    }
-
-    // Print booking details as PDF
     @GetMapping("/generate-pdf/{bookingId}")
     public String generatePdf(@PathVariable int bookingId) {
         return bookingService.generateBookingPdf(bookingId);

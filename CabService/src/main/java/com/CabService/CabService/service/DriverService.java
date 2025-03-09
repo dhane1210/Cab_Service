@@ -15,7 +15,6 @@ public class DriverService {
     @Autowired
     private BookingRepository bookingRepository;
 
-    // Verify customer
     public String verifyCustomer(int driverId, int customerId) {
         Booking booking = bookingRepository.findActiveBookingByCustomer(customerId);
 
@@ -28,17 +27,6 @@ public class DriverService {
         return "Verification failed";
     }
 
-
-    // Complete trip
-//    public String completeTrip(int bookingId, double waitingTime) {
-//        Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new RuntimeException("Booking not found"));
-//        booking.setWaitingTime(waitingTime);
-//        booking.setStatus("Completed");
-//        bookingRepository.save(booking);
-//        return "Trip completed successfully";
-//    }
-
-    // View assigned trip
     public Booking getAssignedTrip(int driverId) {
         return bookingRepository.findAssignedBookingByDriver(driverId);
     }

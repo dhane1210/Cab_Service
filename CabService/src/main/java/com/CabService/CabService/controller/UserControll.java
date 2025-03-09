@@ -7,8 +7,6 @@ import com.CabService.CabService.service.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -96,21 +94,4 @@ public class UserControll {
         }
     }
 
-//    @GetMapping("/check-session")
-//    public ResponseEntity<?> checkSession() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            String username = authentication.getName();
-//            Customer user = customerService.getCustomerByUsername(username)
-//                    .orElseThrow(() -> new RuntimeException("User not found"));
-//
-//            // Return user details
-//            return ResponseEntity.ok(Map.of(
-//                    "id", user.getCustomerId(),
-//                    "username", user.getUsername(),
-//                    "role", user.getRole()
-//            ));
-//        }
-//        return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
-//    }
 }

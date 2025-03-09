@@ -4,20 +4,18 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Admin {
+@Entity
+public class PriceConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int adminId;
+    private Long id;
 
-    private String username;
-    private String password;
+    private double baseFare;
+    private double waitingTimeCharge;
+    private double taxRate;
+    private double discountRate;
 }

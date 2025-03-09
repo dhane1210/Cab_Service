@@ -2,14 +2,8 @@ package com.CabService.CabService.service;
 
 import com.CabService.CabService.config.CustomerPrincipal;
 import com.CabService.CabService.dto.BookingRequest;
-import com.CabService.CabService.model.Bill;
-import com.CabService.CabService.model.Booking;
-import com.CabService.CabService.model.Customer;
-import com.CabService.CabService.model.Driver;
-import com.CabService.CabService.repo.BillRepository;
-import com.CabService.CabService.repo.BookingRepository;
-import com.CabService.CabService.repo.CustomerRepository;
-import com.CabService.CabService.repo.DriverRepository;
+import com.CabService.CabService.model.*;
+import com.CabService.CabService.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,10 +29,10 @@ public class CustomerService implements UserDetailsService {
     private DriverRepository driverRepository;
 
     @Autowired
-    private AdminService adminService;
+     PriceConfigRepository priceConfigRepository;
 
     @Autowired
-    private BillRepository billRepository; // Add BillRepository
+    private BillRepository billRepository;
 
     // Add a new booking and create a bill
     @Transactional
@@ -68,26 +62,41 @@ public class CustomerService implements UserDetailsService {
         return "Booking added successfully";
     }
 
-    // Create and link a Bill to the booking
+    public PriceConfig getDefaultPriceConfig() {
+        return priceConfigRepository.findById(1L) // Assuming there's only one config
+                .orElseThrow(() -> new RuntimeException("Price configuration not found"));
+    }
+
     private void createAndLinkBill(Booking booking) {
-        // Calculate billing details
-        double baseFare = booking.getFare(); // Use the fare from the booking
-        double waitingTimeCharge = 0.0; // Default waiting time charge
-        double taxRate = 10.0; // Example tax rate (10%)
-        double discountRate = 5.0; // Example discount rate (5%)
+        PriceConfig priceConfig = getDefaultPriceConfig();
 
-        double taxes = baseFare * (taxRate / 100); // Calculate tax
-        double discount = baseFare * (discountRate / 100); // Calculate discount
+        double baseFare = priceConfig.getBaseFare();
+        double waitingTimeCharge = booking.getWaitingTime() * priceConfig.getWaitingTimeCharge();
+        double taxRate = priceConfig.getTaxRate();
+        double discountRate = priceConfig.getDiscountRate();
 
-        // Create a new Bill
-        Bill bill = new Bill(booking, baseFare, waitingTimeCharge, taxes, discount);
+        double taxes = baseFare * (taxRate / 100);
+        double discount = baseFare * (discountRate / 100);
 
-        // Save the bill
+        double totalAmount = baseFare + waitingTimeCharge + taxes - discount;
+
+        Bill bill = new Bill(booking, baseFare, waitingTimeCharge, taxes, discount, totalAmount);
         billRepository.save(bill);
 
-        // Link the bill to the booking
         booking.setBill(bill);
-        bookingRepository.save(booking); // Update the booking with the bill
+        bookingRepository.save(booking);
+    }
+
+
+    @Transactional
+    public String updatePriceConfig(PriceConfig priceConfig) {
+        PriceConfig existingConfig = getDefaultPriceConfig();
+        existingConfig.setBaseFare(priceConfig.getBaseFare());
+        existingConfig.setWaitingTimeCharge(priceConfig.getWaitingTimeCharge());
+        existingConfig.setTaxRate(priceConfig.getTaxRate());
+        existingConfig.setDiscountRate(priceConfig.getDiscountRate());
+        priceConfigRepository.save(existingConfig);
+        return "Price configuration updated successfully";
     }
 
     // Get bookings by customer

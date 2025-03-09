@@ -46,12 +46,4 @@ public class UserAuthService {
         return "Fail";
     }
 
-
-
-
-//    // Authenticate admin
-//    public String authenticate(String username, String password) {
-//        Admin admin = adminRepository.findByUsernameAndPassword(username, password);
-//        return (admin != null) ? "Login successful" : "Invalid credentials";
-//    }
 }

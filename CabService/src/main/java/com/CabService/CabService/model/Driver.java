@@ -11,23 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Driver {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private int driverId;
-//
-//    private String name;
-//    private String licenseNumber;
-//    private String phone;
-//
-//    @Column(name = "is_available", nullable = false)
-//    private boolean isAvailable;
-//
-//
-//    @ManyToOne
-//    @JoinColumn(name = "car_id")
-//    private Car assignedCar;
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int driverId;

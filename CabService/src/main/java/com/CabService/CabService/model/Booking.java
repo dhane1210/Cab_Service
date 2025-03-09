@@ -16,10 +16,10 @@ public class Booking {
     private double distance;
     private double fare;
     private String status;
-    private double waitingTime; // Add this field
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
-    @JsonManagedReference // Prevents infinite recursion
-    private Bill bill; // Reference to the Bill entity
+    private double waitingTime;
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Bill bill;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)

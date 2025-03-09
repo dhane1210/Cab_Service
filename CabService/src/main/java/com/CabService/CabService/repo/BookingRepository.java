@@ -20,8 +20,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Booking findActiveBookingByCustomer(@Param("customerId") int customerId);
 
     // Find assigned booking for a specific driver
-@Query("SELECT b FROM Booking b WHERE b.assignedDriver.driverId = :driverId AND b.status = 'Assigned'")
-Booking findAssignedBookingByDriver(@Param("driverId") int driverId);
+    @Query("SELECT b FROM Booking b WHERE b.assignedDriver.driverId = :driverId AND b.status = 'Assigned'")
+    Booking findAssignedBookingByDriver(@Param("driverId") int driverId);
 
     List<Booking> findAll();
 
