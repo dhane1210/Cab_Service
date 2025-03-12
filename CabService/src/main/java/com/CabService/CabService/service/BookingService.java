@@ -15,8 +15,6 @@ public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
 
-    @Autowired
-    private AdminService adminService;
 
     // Generate booking PDF
     public String generateBookingPdf(int bookingId) {
