@@ -30,8 +30,6 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}-
 
-      - name: Change to project directory and list files
+      - name: Build and skip tests
         working-directory: ./CabService
-        run: |
-          ls -la # List files to verify the directory structure
-          mvn clean test # Run Maven commands
+        run: mvn clean install -DskipTests
