@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class UserControllTest {
 
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -154,7 +153,4 @@ class UserControllTest {
                 .andExpect(jsonPath("$.username").value("testuser")) // Check username
                 .andExpect(jsonPath("$.role").value("CUSTOMER")); // Check role
     }
-
-
-
 }

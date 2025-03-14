@@ -15,11 +15,8 @@ public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
 
-
-    // Generate booking PDF
     public String generateBookingPdf(int bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new RuntimeException("Booking not found"));
-        // Logic to generate a PDF
         return "Booking PDF generated successfully";
     }
 }

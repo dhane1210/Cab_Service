@@ -10,7 +10,6 @@ import java.util.List;
 @Repository
 public interface CarRepository extends JpaRepository<Car, Integer> {
 
-    // Find all available cars
     @Query("SELECT c FROM Car c WHERE c.isAvailable = true")
     List<Car> findAvailableCars();
 }

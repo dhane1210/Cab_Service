@@ -146,7 +146,6 @@ public class AdminControllerTest {
     }
 
 
-
     @Test
     public void testGetAvailableDrivers() throws Exception {
         // Arrange: Create mock DriverWithCarDetails objects

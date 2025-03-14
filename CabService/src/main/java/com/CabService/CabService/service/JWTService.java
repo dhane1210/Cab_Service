@@ -7,19 +7,13 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
 public class JWTService {
 
-    // Use a fixed secret key (replace "your-secret-key" with a strong, secure key)
     private final String secretKey = "NF7rINhTciWgUTgE9wExt6lF630dmk+VvROp6Tdrmgw=";
 
     public String generateToken(String username, String role) {

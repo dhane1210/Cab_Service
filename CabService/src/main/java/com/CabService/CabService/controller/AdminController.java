@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@CrossOrigin(origins = "*", allowCredentials = "true")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -57,8 +56,6 @@ public class AdminController {
         return adminService.getAvailableDrivers();
     }
 
-
-    // Manage drivers
     @PostMapping("/add-driver")
     public String addDriver(@RequestBody Driver driver) {
         return adminService.addDriver(driver);
@@ -68,27 +65,23 @@ public class AdminController {
     public String finalizeBooking(@PathVariable int bookingId) {
         return adminService.acceptBooking(bookingId);
     }
-    // Manage cars
+
     @PostMapping("/add-car")
     public String addCar(@RequestBody Car car) {
         car.setAvailable(true);
         return adminService.addCar(car);
     }
 
-    // Connect car to driver
     @PostMapping("/assign-car-to-driver")
     public String assignCarToDriver(@RequestParam int driverId, @RequestParam int carId) {
         return adminService.assignCarToDriver(driverId, carId);
     }
 
-
-    // Fetch a bill by booking ID
     @GetMapping("/bill/{bookingId}")
     public ResponseEntity<Bill> getBillByBookingId(@PathVariable int bookingId) {
         Bill bill = billService.getBillByBookingId(bookingId);
         return ResponseEntity.ok(bill);
     }
-
 
     @PutMapping("/price-config")
     public String updatePriceConfig(@RequestBody PriceConfig priceConfig) {

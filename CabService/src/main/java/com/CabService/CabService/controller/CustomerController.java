@@ -28,7 +28,6 @@ public class CustomerController {
         }
     }
 
-    // Add new booking
     @PostMapping("/add-booking")
     public ResponseEntity<?> addBooking(@RequestBody BookingRequest bookingRequest) {
         try {
@@ -39,19 +38,16 @@ public class CustomerController {
         }
     }
 
-    // View bookings
     @GetMapping("/view-bookings/{customerId}")
     public List<Booking> viewBookings(@PathVariable int customerId) {
         return customerService.getBookingsByCustomer(customerId);
     }
 
-    // Finalize booking (send to admin)
     @PutMapping("/finalize-booking/{bookingId}")
     public String finalizeBooking(@PathVariable int bookingId) {
         return customerService.finalizeBooking(bookingId);
     }
 
-    // View bill
     @GetMapping("/view-bill/{bookingId}")
     public Bill viewBill(@PathVariable int bookingId) {
         return customerService.getBill(bookingId);
