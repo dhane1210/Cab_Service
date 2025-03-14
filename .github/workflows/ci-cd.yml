@@ -30,6 +30,8 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}-
 
-      - name: Change to project directory and run tests
-        working-directory: ./CabService # Change to the directory where pom.xml is located
-        run: mvn clean test
+      - name: Change to project directory and list files
+        working-directory: ./CabService
+        run: |
+          ls -la # List files to verify the directory structure
+          mvn clean test # Run Maven commands
