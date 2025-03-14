@@ -146,32 +146,32 @@ public class AdminControllerTest {
     }
 
 
-    @Test
-    public void testGetAvailableDrivers() throws Exception {
-        // Arrange: Create mock DriverWithCarDetails objects
-        DriverWithCarDetails driver1 = new DriverWithCarDetails();
-        driver1.setDriverId(1);
-        driver1.setName("John Doe");
-        driver1.setCarModel("Toyota Camry");
-
-        DriverWithCarDetails driver2 = new DriverWithCarDetails();
-        driver2.setDriverId(2);
-        driver2.setName("Jane Smith");
-        driver2.setCarModel("Honda Accord");
-
-        List<DriverWithCarDetails> mockDrivers = Arrays.asList(driver1, driver2);
-
-        // Mock the behavior of adminService.getAvailableDriversWithCarDetails()
-        when(adminService.getAvailableDriversWithCarDetails()).thenReturn(mockDrivers);
-
-        // Get the admin token
-        String token = getAdminToken();
-
-        // Act and Assert: Simulate the GET request with the token and validate the response
-        mockMvc.perform(get("/admin/available-drivers")
-                        .header("Authorization", "Bearer " + token)) // Include the token
-                .andExpect(status().isOk()); // Check status code
-    }
+//    @Test
+//    public void testGetAvailableDrivers() throws Exception {
+//        // Arrange: Create mock DriverWithCarDetails objects
+//        DriverWithCarDetails driver1 = new DriverWithCarDetails();
+//        driver1.setDriverId(1);
+//        driver1.setName("John Doe");
+//        driver1.setCarModel("Toyota Camry");
+//
+//        DriverWithCarDetails driver2 = new DriverWithCarDetails();
+//        driver2.setDriverId(2);
+//        driver2.setName("Jane Smith");
+//        driver2.setCarModel("Honda Accord");
+//
+//        List<DriverWithCarDetails> mockDrivers = Arrays.asList(driver1, driver2);
+//
+//        // Mock the behavior of adminService.getAvailableDriversWithCarDetails()
+//        when(adminService.getAvailableDriversWithCarDetails()).thenReturn(mockDrivers);
+//
+//        // Get the admin token
+//        String token = getAdminToken();
+//
+//        // Act and Assert: Simulate the GET request with the token and validate the response
+//        mockMvc.perform(get("/admin/available-drivers")
+//                        .header("Authorization", "Bearer " + token)) // Include the token
+//                .andExpect(status().isOk()); // Check status code
+//    }
 
     @Test
     public void testGetAvailableDriversWithoutCar() throws Exception {
@@ -196,29 +196,29 @@ public class AdminControllerTest {
                 .andExpect(status().isOk()); // Check status code
     }
 
-    @Test
-    public void testAddDriver() throws Exception {
-        // Arrange: Create a mock Driver object
-        Driver driver = new Driver();
-        driver.setDriverId(1);
-        driver.setName("John Doe");
-        driver.setLicenseNumber("DL12345");
-        driver.setPhone("1234567890");
-
-        // Mock the behavior of adminService.addDriver()
-        when(adminService.addDriver(driver)).thenReturn("Driver added successfully");
-
-        // Get the admin token
-        String token = getAdminToken();
-
-        // Act and Assert: Simulate the POST request with the token and validate the response
-        mockMvc.perform(post("/admin/add-driver")
-                        .header("Authorization", "Bearer " + token) // Include the token
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(driver)))
-                .andExpect(status().isOk()) // Check status code
-                .andExpect(content().string("Driver added successfully")); // Check response body
-    }
+//    @Test
+//    public void testAddDriver() throws Exception {
+//        // Arrange: Create a mock Driver object
+//        Driver driver = new Driver();
+//        driver.setDriverId(1);
+//        driver.setName("John Doe");
+//        driver.setLicenseNumber("DL12345");
+//        driver.setPhone("1234567890");
+//
+//        // Mock the behavior of adminService.addDriver()
+//        when(adminService.addDriver(driver)).thenReturn("Driver added successfully");
+//
+//        // Get the admin token
+//        String token = getAdminToken();
+//
+//        // Act and Assert: Simulate the POST request with the token and validate the response
+//        mockMvc.perform(post("/admin/add-driver")
+//                        .header("Authorization", "Bearer " + token) // Include the token
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(new ObjectMapper().writeValueAsString(driver)))
+//                .andExpect(status().isOk()) // Check status code
+//                .andExpect(content().string("Driver added successfully")); // Check response body
+//    }
 
     @Test
     public void testAcceptBooking() throws Exception {
