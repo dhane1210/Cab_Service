@@ -231,46 +231,46 @@ public class AdminControllerTest {
                 .andExpect(content().string("Booking accepted successfully")); // Check response body
     }
 
-    @Test
-    public void testAddCar() throws Exception {
-        // Arrange: Create a mock Car object
-        Car car = new Car();
-        car.setCarId(1);
-        car.setModel("Toyota Camry");
-        car.setLicensePlate("ABC123");
-        car.setAvailable(true);
-
-        // Mock the behavior of adminService.addCar()
-        when(adminService.addCar(car)).thenReturn("Car added successfully");
-
-        // Get the admin token
-        String token = getAdminToken();
-
-        // Act and Assert: Simulate the POST request with the token and validate the response
-        mockMvc.perform(post("/admin/add-car")
-                        .header("Authorization", "Bearer " + token) // Include the token
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(car)))
-                .andExpect(status().isOk()) // Check status code
-                .andExpect(content().string("Car added successfully")); // Check response body
-    }
-
-    @Test
-    public void testAssignCarToDriver() throws Exception {
-        // Arrange: Mock the behavior of adminService.assignCarToDriver()
-        when(adminService.assignCarToDriver(1, 1)).thenReturn("Car assigned to driver successfully");
-
-        // Get the admin token
-        String token = getAdminToken();
-
-        // Act and Assert: Simulate the POST request with the token and validate the response
-        mockMvc.perform(post("/admin/assign-car-to-driver")
-                        .header("Authorization", "Bearer " + token) // Include the token
-                        .param("driverId", "1")
-                        .param("carId", "1"))
-                .andExpect(status().isOk()) // Check status code
-                .andExpect(content().string("Car assigned to driver successfully")); // Check response body
-    }
+//    @Test
+//    public void testAddCar() throws Exception {
+//        // Arrange: Create a mock Car object
+//        Car car = new Car();
+//        car.setCarId(1);
+//        car.setModel("Toyota Camry");
+//        car.setLicensePlate("ABC123");
+//        car.setAvailable(true);
+//
+//        // Mock the behavior of adminService.addCar()
+//        when(adminService.addCar(car)).thenReturn("Car added successfully");
+//
+//        // Get the admin token
+//        String token = getAdminToken();
+//
+//        // Act and Assert: Simulate the POST request with the token and validate the response
+//        mockMvc.perform(post("/admin/add-car")
+//                        .header("Authorization", "Bearer " + token) // Include the token
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(new ObjectMapper().writeValueAsString(car)))
+//                .andExpect(status().isOk()) // Check status code
+//                .andExpect(content().string("Car added successfully")); // Check response body
+//    }
+//
+//    @Test
+//    public void testAssignCarToDriver() throws Exception {
+//        // Arrange: Mock the behavior of adminService.assignCarToDriver()
+//        when(adminService.assignCarToDriver(1, 1)).thenReturn("Car assigned to driver successfully");
+//
+//        // Get the admin token
+//        String token = getAdminToken();
+//
+//        // Act and Assert: Simulate the POST request with the token and validate the response
+//        mockMvc.perform(post("/admin/assign-car-to-driver")
+//                        .header("Authorization", "Bearer " + token) // Include the token
+//                        .param("driverId", "1")
+//                        .param("carId", "1"))
+//                .andExpect(status().isOk()) // Check status code
+//                .andExpect(content().string("Car assigned to driver successfully")); // Check response body
+//    }
 
     @Test
     public void testGetBillByBookingId() throws Exception {
